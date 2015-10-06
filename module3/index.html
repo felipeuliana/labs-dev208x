@@ -1,0 +1,120 @@
+<html>
+  <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <style>
+      body {
+        font-family: Verdana;
+      }
+      h1, h2, h3 {
+        color: darkblue;
+      }
+      .rating-circle {
+        height: 2em;
+        width: 2em;
+        border: .1em solid black;
+        border-radius: 1.1em;
+        display: inline-block;
+        margin: 0;
+        padding: .1em;
+      }
+      .rating-hover {
+        background-color: yellow;
+      }
+      .rating-chosen {
+        background-color: green;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Contoso Web Developer Conference</h1>
+    <h2>Finding elements using jQuery</h2>
+    <div>This session is about identifying elements using jQuery methods and selectors.</div>
+    <h3>Rate this session</h3>
+    <div id="rating-container" max-value="5"></div>
+
+    <div>
+      <label for="max-value">Enter max value:</label>
+      <input type="text" id="max-value" />
+      <button type="button" id="update-max-value">Update max value</button>
+    </div>
+
+    <button type="button" id="save-rating">Save rating</button>
+
+    <div id="output"></div>
+
+    <script src="../scripts/jquery-2.1.4.min.js"></script>
+    <!-- <script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.4.min.js"></script> -->
+
+    <script>
+      // your answer would go here
+      $(document).ready(function () {
+
+        // catch and define the number of rating circles
+        var maxValue = parseInt($('#rating-container').attr('max-value'));
+
+        // append the rating circles to the rating container
+        appendRatingCircles(maxValue);
+
+        // when the button was clicked the new value was catched
+        // defining a new max value to the rate system
+        $('#update-max-value').click(function () {
+          var newMaxValue = parseInt($('#max-value').val());
+          maxValue = newMaxValue;
+          $('#rating-container').attr('max-value', maxValue)
+          if(isNaN(maxValue)) {
+            $('#rating-container').text('Please enter a number.');
+          } else {
+            appendRatingCircles(maxValue);
+          }
+        });
+
+        // on click, create the object and input the data
+        $('#save-rating').click(function () {
+          var rating = {
+            value: $('.rating-chosen').length,
+            maxValue: parseInt($('#rating-container').attr('max-value'))
+          };
+          // send it to the service
+          $.post('http://jquery-edx.azurewebsites.net/api/Rating', rating, function () {
+            // update the UI, disabling the button until the server response
+            $(document).ajaxSend(function () {
+            	$('#save-rating').attr('disabled', 'disabled');
+            }).ajaxComplete(function () {
+            	$('#save-rating').removeAttr('disabled');
+            });
+          // then, with the server response, output the message
+          }).done(function (data) {
+            $('#output').text(data.message);
+          });
+        });
+
+        // make the rate circles yellow on 'mouseenter'
+        $('#rating-container').on('mouseenter', '.rating-circle', function () {
+          $('.rating-circle').removeClass('rating-chosen');
+          $(this).prevAll().andSelf().addClass('rating-hover');
+        });
+
+        // remove the yellow from the rate circles on 'mouseout'
+        $('#rating-container').on('mouseout', '.rating-circle', function () {
+          $('.rating-circle').removeClass('rating-hover');
+        });
+
+        // make the rate circles green when clicked
+        $('#rating-container').on('click', '.rating-circle', function () {
+          $('.rating-circle').removeClass('rating-chosen');
+          $(this).prevAll().andSelf().addClass('rating-chosen');
+        });
+
+      });
+
+      // function that make append rating circles reusable
+      function appendRatingCircles(maxValue) {
+        $('#rating-container').empty();
+        for (var i = 0; i < maxValue; i++) {
+          $('#rating-container').append('<div class="rating-circle"></div>');
+        }
+      }
+
+    </script>
+  </body>
+</html>

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+  </head>
+  <body>
+
+    <!-- code for questions #1 until #5 -->
+    <div id="target">
+      <div>Name</div>
+    </div>
+
+    <!-- code for question #6 -->
+    <div id="item">
+      <div>Name</div>
+    </div>
+    <button id="button" type="button" name="button">Button</button>
+
+    <!-- jQuery script -->
+    <script src="../scripts/jquery-2.1.4.min.js"></script>
+
+    <!-- scripts for answers -->
+    <script>
+
+      // question #1
+      $('#target').html('<div>Full name</div>');
+
+      // question #2
+      $('#target').append('<input type="text" id="full-name" />');
+
+      // question #3
+      $('#target').children().wrapAll('<section></section>');
+
+      // question #4
+      $('section > div').replaceWith('<label for="full-name">Full name</label>');
+
+      // question #5
+      $('section input').addClass('form-control');
+
+      // question #6
+      $('#button').click(function() {
+        // code of the question, to be replaced
+        // $('#item').slideToggle(500);
+        // one of the the codes that answer question #6
+        $('#item').slideToggle(500).promise().done(display);
+        // the other code that answer question #6 to
+        // $('#item').slideToggle(500).promise().then(display);
+      });
+
+      function display() {
+        alert('done!');
+      }
+
+    </script>
+
+  </body>
+</html>
