@@ -1,0 +1,90 @@
+<html>
+  <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <style>
+      body {
+        font-family: Verdana;
+      }
+      h1, h2, h3 {
+        color: darkblue;
+      }
+      .rating-circle {
+        height: 2em;
+        width: 2em;
+        border: .1em solid black;
+        border-radius: 1.1em;
+        display: inline-block;
+        margin: 0;
+        padding: .1em;
+      }
+      .rating-hover {
+        background-color: yellow;
+      }
+      .rating-chosen {
+        background-color: green;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Contoso Web Developer Conference</h1>
+    <h2>Finding elements using jQuery</h2>
+    <div>This session is about identifying elements using jQuery methods and selectors.</div>
+    <h3>Rate this session</h3>
+    <div id="rating-container" max-value="5"></div>
+
+    <div>
+    <label for="max-value">Enter max value:</label>
+    <input type="text" id="max-value" />
+    <button type="button" id="update-max-value">Update max value</button>
+    </div>
+
+    <script src="../scripts/jquery-2.1.4.min.js"></script>
+    <!-- <script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.4.min.js"></script> -->
+
+    <script>
+      // your answer would go here
+      $(document).ready(function () {
+
+      // catch and define the number of rating circles
+      var maxValue = $('#rating-container').attr('max-value');
+
+      // append the rating circles to the rating container
+      appendRatingCircles(maxValue);
+
+      // when the button was clicked the new value was catched
+      // defining a new max value to the rate system
+      $('#update-max-value').click(function () {
+        var newMaxValue = $('#max-value').val();
+        maxValue = newMaxValue;
+        appendRatingCircles(maxValue);
+      });
+
+      // make the rate circles yellow on 'mouseenter'
+      $('#rating-container').delegate('.rating-circle', 'mouseenter', function () {
+        $(this).addClass('rating-hover').prevAll().addClass('rating-hover');
+      });
+
+      // remove the yellow from the rate circles on 'mouseout'
+      $('#rating-container').delegate('.rating-circle', 'mouseout', function () {
+        $('.rating-circle').removeClass('rating-hover');
+      });
+
+      // make the rate circles green when clicked
+      $('#rating-container').delegate('.rating-circle', 'click', function () {
+        $('.rating-circle').removeClass('rating-chosen');
+        $(this).addClass('rating-chosen').prevAll().addClass('rating-chosen');
+      });
+
+      });
+
+      // function that make append rating circles reusable
+      function appendRatingCircles(maxValue) {
+        $('#rating-container').empty();
+        for (var i = 0; i < maxValue; i++) {
+          $('#rating-container').append('<div class="rating-circle"></div>');
+        }
+      }
+
+    </script>
+  </body>
+</html>
